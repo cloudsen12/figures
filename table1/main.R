@@ -6,12 +6,18 @@ rm(list = ls(all = TRUE))
 # Installing and loading packages
 if (!require("pacman")) {
   install.packages("pacman")
+} else if (!require("rhdf5")) {
+  library(BiocManager)
+  BiocManager::install("rhdf5")
 }
 
 # Loading packages
 pacman::p_load(
-  tidyverse, rgee, filesstrings, magrittr, raster, janitor, sf
+  tidyverse, rgee, filesstrings, magrittr, raster, janitor, sf, BiocManager
 )
+
+
+BiocManager::install("rhdf5")
 
 # Save table ----
 saveRDS(

@@ -76,7 +76,6 @@ countlabeling <- function(dataset, path) {
         )
     }
   } else if (dataset == "sparcs") {
-    path <- "dataset/sparcs"
     # List of raster
     lst <-
       list.files(
@@ -129,6 +128,30 @@ countlabeling <- function(dataset, path) {
             mutate(id = id[i])
         )
     }
+  } else if (dataset == "s2_hollstein") {
+    path <- "dataset/s2hollstein/"
+    # Load dataset
+    img <-
+      list.files(
+        path, pattern = "\\.h5$",
+        full.names = T
+      ) %>%
+      h5dump()
+    # Build table
+    df <-
+      t(
+        table(img$classes) %>% as.matrix()
+      ) %>%
+      as_tibble() %>%
+      mutate(
+        valid = rowSums(
+          across(where(is.numeric)),
+          na.rm = T
+        ),
+        invalid = 0,
+        total = valid
+      ) %>%
+      mutate(id = list.files(path, pattern = "\\.h5$"))
   }
   # change colnames
   if (dataset == "irish") {
@@ -143,6 +166,13 @@ countlabeling <- function(dataset, path) {
         "Shadow", "Shadow_over_Water", "Water",
         "Snow", "Land", "Cloud", "Flooded", "id",
         "Valid", "Invalid", "Total"
+      )
+  } else if (dataset == "s2_hollstein") {
+    names(df) <-
+      c(
+        "Cloud", "Cirrus", "Snow",
+        "Shadow", "Water", "Clear_sky",
+        "Valid", "Invalid", "Total", "id"
       )
   }
   # return table
