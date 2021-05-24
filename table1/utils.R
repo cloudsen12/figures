@@ -129,7 +129,6 @@ countlabeling <- function(dataset, path) {
         )
     }
   } else if (dataset == "s2_hollstein") {
-    path <- "dataset/s2hollstein/"
     # Load dataset
     img <-
       list.files(
@@ -152,6 +151,72 @@ countlabeling <- function(dataset, path) {
         total = valid
       ) %>%
       mutate(id = list.files(path, pattern = "\\.h5$"))
+  } else if (dataset == "baetens_hagolle") {
+    path <- "dataset/baetens_hagolle"
+    # List of raster
+    lst <-
+      list.files(
+        path,
+        pattern = "\\map.tif$",
+        full.names = T,
+        recursive = T
+      )
+    # List of scene id
+    id <-
+      c(
+        list.dirs(
+          sprintf("%1s/Hollstein", path),
+          recursive = F,
+          full.names = F
+        ),
+        list.dirs(
+          sprintf("%1s/Reference_dataset", path),
+          recursive = F,
+          full.names = F
+        )
+      )
+    # Build table ----
+    # create empty table
+    df <-
+      tibble(
+        p0 = numeric(),
+        p1 = numeric(),
+        p2 = numeric(),
+        p3 = numeric(),
+        p4 = numeric(),
+        p5 = numeric(),
+        p6 = numeric(),
+        p7 = numeric(),
+        id = character()
+      )
+    for (i in seq_along(lst)) {
+      cat(sprintf("scene = %1s\n", i))
+      # load raster
+      img <- raster(lst[i])
+      # build table
+      df %<>%
+        bind_rows(
+          t(
+            data.frame(
+              getValues(img) %>%
+                table()
+            )
+          ) %>%
+            as_tibble() %>%
+            janitor::row_to_names(row_number = 1) %>%
+            rename_all(~ sprintf("p%1s", .x)) %>%
+            mutate_all(as.numeric) %>%
+            mutate(
+              valid = rowSums(
+                across(where(is.numeric)),
+                na.rm = T
+              ),
+              invalid = ncell(img) - valid,
+              total = ncell(img)
+            ) %>%
+            mutate(id = id[i])
+        )
+    }
   }
   # change colnames
   if (dataset == "irish") {
