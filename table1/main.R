@@ -13,7 +13,8 @@ if (!require("pacman")) {
 
 # Loading packages
 pacman::p_load(
-  tidyverse, rgee, filesstrings, magrittr, raster, janitor, sf, BiocManager
+  tidyverse, rgee, filesstrings, magrittr, raster, janitor, sf, BiocManager,
+  reticulate
 )
 
 

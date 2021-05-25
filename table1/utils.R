@@ -86,7 +86,7 @@ countlabeling <- function(dataset, path) {
       )
     # List of scene id
     id <- basename(lst) %>% str_sub(1, -5)
-    # Build table ----
+    # Build table
     # create empty table
     df <-
       tibble(
@@ -152,7 +152,6 @@ countlabeling <- function(dataset, path) {
       ) %>%
       mutate(id = list.files(path, pattern = "\\.h5$"))
   } else if (dataset == "baetens_hagolle") {
-    path <- "dataset/baetens_hagolle"
     # List of raster
     lst <-
       list.files(
@@ -175,7 +174,7 @@ countlabeling <- function(dataset, path) {
           full.names = F
         )
       )
-    # Build table ----
+    # Build table
     # create empty table
     df <-
       tibble(
@@ -217,6 +216,57 @@ countlabeling <- function(dataset, path) {
             mutate(id = id[i])
         )
     }
+  } else if (dataset == "cloud_catalog") {
+    path <- "dataset/cloud_catalog"
+    np <- import("numpy")
+    # List of raster
+    lst <-
+      list.files(
+        path,
+        pattern = "\\.npy$",
+        full.names = T,
+        recursive = T
+      )
+    # Build table
+    # create empty table
+    df <-
+      tibble(
+        p1 = numeric(),
+        p2 = numeric(),
+        p3 = numeric(),
+        id = character()
+      )
+    # fill table
+    for (i in 1:5) {#seq_along(lst)
+      cat(sprintf("scene = %1s\n", i))
+      # load raster
+      img <- sum(brick(np$load(lst[i])) * c(1, 2, 3))
+      # List of scene id
+      id <- basename(lst[i]) %>% str_sub(1, -5)
+      # build table
+      df %<>%
+        bind_rows(
+          t(
+            data.frame(
+              getValues(img) %>%
+                table()
+            )
+          ) %>%
+            as_data_frame() %>%
+            janitor::row_to_names(row_number = 1) %>%
+            rename_all(~ sprintf("p%1s", .x)) %>%
+            mutate_all(as.numeric) %>%
+            mutate(
+              valid = rowSums(
+                across(where(is.numeric)),
+                na.rm = T
+              ),
+              invalid = ncell(img) - valid,
+              total = ncell(img)
+            ) %>%
+            mutate(id = id)
+        )
+    }
   }
   # change colnames
   if (dataset == "irish") {
@@ -238,6 +288,12 @@ countlabeling <- function(dataset, path) {
         "Cloud", "Cirrus", "Snow",
         "Shadow", "Water", "Clear_sky",
         "Valid", "Invalid", "Total", "id"
+      )
+  } else if (dataset == "cloud_catalog") {
+    names(df) <-
+      c(
+        "Clear", "Cloud", "Cloud_Shadow",
+        "id", "Valid", "Invalid", "Total"
       )
   }
   # return table
