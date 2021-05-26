@@ -13,15 +13,25 @@ if (!require("pacman")) {
 
 # Loading packages
 pacman::p_load(
-  tidyverse, rgee, filesstrings, magrittr, raster, janitor, sf, BiocManager,
-  reticulate
+  rgdal, tidyverse, rgee, filesstrings, magrittr, raster, janitor, sf,
+  BiocManager, reticulate
 )
 
+# Load functions
+source("utils.R")
 
-BiocManager::install("rhdf5")
+# Datasets
+# 1. irish
+# 2. sparcs
+# 3. s2_hollstein
+# 4. baetens_hagolle
+# 5. cloud_catalog
+# 6. biome8
+# 7. 38cloud
+# 8. 95cloud
+
+# Cound labeling by dataset
+table_biome8 <- countlabeling(dataset = "biome8", path = "dataset/biome8")
 
 # Save table ----
-saveRDS(
-  mutate_all(df, ~ replace(., is.na(.), 0)),
-  file = "rds/irish.rds"
-)
+saveRDS(table_biome8, file = "rds/irish.rds")
