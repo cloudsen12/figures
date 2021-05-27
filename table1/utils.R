@@ -10,7 +10,7 @@ countlabeling <- function(dataset, path) {
       )
     # id of scenes
     id <-
-      list.img %>%
+      lst %>%
       basename() %>%
       str_sub(1, -5)
     # build empty dataframe

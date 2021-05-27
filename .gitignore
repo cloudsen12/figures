@@ -1,3 +1,6 @@
+table1/dataset/*
+!table1/dataset/link-dataset.txt
+
 .Rproj.user
 .Rhistory
 .RData
