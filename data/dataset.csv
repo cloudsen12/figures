@@ -1,0 +1,25 @@
+Class,Difficulty,Overall
+clear,1,99.87
+thin cloud,1,98.77
+thick cloud,1,99.21
+cloud shadow,1,98.95
+clear,2,97.1
+thin cloud,2,95.25
+thick cloud,2,96.4
+cloud shadow,2,95.11
+clear,3,93.2
+thin cloud,3,88.6
+thick cloud,3,92.2
+cloud shadow,3,90.1
+clear,4,91.05
+thin cloud,4,86.47
+thick cloud,4,90.22
+cloud shadow,4,87.8
+clear,5,88.8
+thin cloud,5,82.11
+thick cloud,5,85.14
+cloud shadow,5,83.2
+clear,overall,94.004
+thin cloud,overall,90.24
+thick cloud,overall,92.634
+cloud shadow,overall,91.032
