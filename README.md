@@ -16,7 +16,7 @@
 
 ## Introduction
 
-This repository contain the code used to create all the figures of cloudSEN12. @fernandoprudencio is a skillful researcher (and good friend). Unfortnadtely, he prefer to user tidyverse rather than data.table </3. So if the API changed again, please let us!
+This repository contain the code used to create all the figures of cloudSEN12 paper. [@fernandoprudencio](https://github.com/fernandoprudencio) is a skillful researcher (and good friend). Unfortnadtely, he prefer to user tidyverse rather than data.table </3. So if the API changed again, please let us!
 
 ## Instructions
 
