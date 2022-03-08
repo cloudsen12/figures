@@ -24,42 +24,65 @@
 # Load packages ----
 library(tidyverse)
 library(magick)
-library(viridis)
 library(readr)
 
+library(broom)
+library(cvms)
+library(ggimage)
+library(rsvg)
+library(ggnewscale)
 
-# Load dataset ----
-dataset <-
-  read_csv("data/dataset.csv") %>%
-  mutate(Overall = 100 - Overall)
 
-# Build barplot
-gmp <-
-  ggplot(dataset, aes(fill = Class, y = Overall, x = Difficulty)) +
-  labs(x = "Difficulty", y = "\n1 - Accuracy") +
-  geom_bar(position = "dodge", stat = "identity", colour = "black") +
-  scale_fill_manual(values = c("#ffffff", "#ff0000", "#ffff00", "#00ff00")) +
-  scale_y_continuous(
-    breaks = seq(0, 20, 5),
-    limits = c(0, 20)
+# Simulate dataset
+class <- c("Clear", "Cloud\nShadow", "Thick\nCloud", "Thin\nCloud")
+set.seed(2022)
+d_multi <-
+  tibble(
+    target = sample(class, 509, replace = T),
+    prediction = sample(class, 509, replace = T)
+  )
+
+conf_mat <- cvms::confusion_matrix(
+  targets = d_multi$target,
+  predictions = d_multi$prediction
+)
+
+# Plot confusion matrix
+plot <-
+  plot_confusion_matrix(
+    conf_mat$`Confusion Matrix`[[1]],
+    add_sums = TRUE,
+    add_row_percentages = TRUE,
+    add_col_percentages = TRUE,
+    add_counts = FALSE,
+    add_normalized = TRUE,
+    diag_percentages_only = TRUE,
+    palette = "Blues",
+    add_arrows = FALSE,
+    font_normalized = font(size = 4),
+    font_row_percentages = font(size = 3.2),
+    font_col_percentages = font(size = 3.2),
+    sums_settings = sum_tile_settings(
+      palette = "Greens",
+      label = "Total",
+      tc_tile_border_color = "black",
+      tc_tile_border_size = .5
+    )
+  ) +
+  ggplot2::labs(
+    x = "Class from manual clasification",
+    y = "Classification result"
   ) +
   theme_bw() +
+  coord_cartesian(expand = F) +
   theme(
-    legend.margin = margin(3, 7, 7, 7),
-    legend.key.width = unit(1.2, "cm"),
-    legend.direction = "horizontal",
-    legend.key.height = unit(.5, "cm"),
-    legend.title = element_blank(),
-    legend.position = c(.7, .15),
-    legend.box = "horizontal",
-    legend.text = element_text(size = 12, family = "Source Sans Pro"),
     axis.text.x = element_text(
-      size = 10, colour = "black",
+      size = 11, colour = "black",
       family = "Source Sans Pro",
       angle = 0, vjust = .6
     ),
     axis.text.y = element_text(
-      size = 12, color = "black",
+      size = 11, color = "black",
       family = "Source Sans Pro",
       angle = 90,
       vjust = .6,
@@ -77,14 +100,12 @@ gmp <-
     axis.ticks.y = element_line(color = "black"),
     panel.grid = element_blank(),
     panel.border = element_rect(size = 1, color = "black")
-  ) +
-  guides(fill = guide_legend(ncol = 1)) +
-  coord_flip()
+  )
 
 # Save ggplot object
 ggsave(
-  plot = gmp, "figure06/figure06.png",
-  width = 10, height = 13, units = "cm", dpi = 500
+  plot = plot, "figure06/figure06.png",
+  width = 10, height = 10, units = "cm", dpi = 500
 )
 
 # Trim figure ----

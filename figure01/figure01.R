@@ -34,7 +34,7 @@ library(rgeos)
 library(proj4)
 library(tmap)
 library(sf)
-
+library(scales)
 
 # Load dependency functions ----
 source("src/utils.R")
@@ -61,7 +61,7 @@ cloudsen12_sf <-
   cloudsen12_sf %>%
   mutate(
     row.id = 1:n(),
-    pixels = ifelse(type == "nolabel", 261121, pixels)
+    pixels = ifelse(type == "nolabel", 259081, pixels)
   ) %>%
   left_join(
     st_within(
@@ -107,8 +107,14 @@ hexaMap <-
   ) +
   geom_sf(mapping = aes(fill = pixels), color = NA) +
   geom_sf(data = world_sf, fill = NA, color = "black", size = 0.5 / .pt) +
-  scale_fill_viridis_c(
-    limits = c(0, 11), breaks = c(seq(0, 10, 2), 11),
+  scale_fill_gradientn(
+    colours = c(
+      "#f7e627", "#f7e627", "#77cb56", "#299987", "#3e5289", "#452f73", "#440355"
+    ) %>% rev(),
+    values = rescale(c(0, 3, 4, 5, 6, 9, 11)),
+    space = "Lab",
+    limits = c(0, 11),
+    breaks = seq(1, 10, 1),
     guide = guide_colourbar(
       barwidth = 18, barheight = .9,
       title.position = "top",

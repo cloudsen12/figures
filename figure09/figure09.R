@@ -40,50 +40,17 @@ source("src//utils.R")
 # Define projection ----
 crs_goode <- "+proj=igh"
 
-# Load dataset ----
-cloudsen12_sf <- read_sf("data/cloudsen12_db.geojson")
-
 # countries boundaries
 world_sf <-
   st_as_sf(getMap(resolution = "low")) %>%
   st_transform(crs_goode)
 
 # global boundaries
-world_sf_base <-st_read(
-    dsn = "data/hexagonGrid2.geojson"
-  ) %>% st_transform(crs_goode)
-
-world_sf_base$type <- world_sf_base$test
-
-# Modify dataset to plot Figure 09 ----
-cloudsen12_sf <-
-  cloudsen12_sf %>%
-  mutate(
-    row.id = 1:n(),
-    pixels = ifelse(type == "nolabel", 261121, pixels)
-  ) %>%
-  left_join(
-    st_within(
-      st_transform(cloudsen12_sf, crs_goode),
-      world_sf_base
-    ) %>%
-      as.data.frame() %>%
-      as_tibble()
-  ) %>%
-  group_by(col.id) %>%
-  summarise(pixels = sum(pixels))
-
-world_sf_base <-
-  mutate(world_sf_base, col.id = 1:n()) %>%
-  left_join(
-    as.tibble(cloudsen12_sf) %>%
-      dplyr::select(-geometry)
-  ) %>%
-  dplyr::filter(
-    !is.na(pixels)
-  ) %>%
-  dplyr::select(geom, type) %>%
-  mutate(type = as.factor(type))
+world_sf_base <- st_read(
+  dsn = "data/hexagonGrid2.geojson"
+) %>%
+  # st_transform(crs_goode) %>%
+  mutate(test = as.factor(test))
 
 # Goode homolosine Grid ----
 hgoode_grid <- homolosine_goode_grid()
@@ -105,10 +72,10 @@ hexaMap <-
     data = world_sf, fill = "white",
     color = NA, size = 0.5 / .pt
   ) +
-  geom_sf(mapping = aes(fill = type), color = NA) +
+  geom_sf(mapping = aes(fill = test), color = NA) +
   geom_sf(data = world_sf, fill = NA, color = "black", size = 0.5 / .pt) +
   scale_fill_manual(
-    values = c("#ff2b00", "#003dff"),
+    values = c("#9d9d9d", "#373737"),
     labels = c("training\ndataset", "testing\ndataset")
   ) +
   geom_sf(data = goode_without, fill = "white", color = NA) +
@@ -131,8 +98,8 @@ hexaMap <-
     legend.title = element_blank(),
     legend.text =
       element_text(
-        size = 9, family = "Source Sans Pro",
-        face = "bold"
+        size = 9, family = "Source Sans Pro"
+        # face = "bold"
       ),
     panel.background =
       element_rect(
