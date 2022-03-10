@@ -1,0 +1,87 @@
+<Layout printResolution="300" units="mm" name="print" worldFileMap="{2a81b7aa-7655-4186-bbbe-c6a2d1f35351}">
+ <Snapper snapToGrid="0" tolerance="5" snapToGuides="1" snapToItems="1"/>
+ <Grid offsetUnits="mm" offsetX="0" offsetY="0" resUnits="mm" resolution="10"/>
+ <PageCollection>
+  <symbol force_rhr="0" type="fill" name="" alpha="1" clip_to_extent="1">
+   <layer class="SimpleFill" locked="0" pass="0" enabled="1">
+    <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+    <prop v="255,255,255,255" k="color"/>
+    <prop v="miter" k="joinstyle"/>
+    <prop v="0,0" k="offset"/>
+    <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+    <prop v="MM" k="offset_unit"/>
+    <prop v="35,35,35,255" k="outline_color"/>
+    <prop v="no" k="outline_style"/>
+    <prop v="0.26" k="outline_width"/>
+    <prop v="MM" k="outline_width_unit"/>
+    <prop v="solid" k="style"/>
+    <data_defined_properties>
+     <Option type="Map">
+      <Option type="QString" value="" name="name"/>
+      <Option name="properties"/>
+      <Option type="QString" value="collection" name="type"/>
+     </Option>
+    </data_defined_properties>
+   </layer>
+  </symbol>
+  <LayoutItem uuid="{11a6b1c0-24d5-4456-bc94-33a741170c82}" referencePoint="0" templateUuid="{11a6b1c0-24d5-4456-bc94-33a741170c82}" frameJoinStyle="miter" frame="false" blendMode="0" opacity="1" positionOnPage="0,0,mm" excludeFromExports="0" outlineWidthM="0.3,mm" visibility="1" size="149,149,mm" background="true" groupUuid="" type="65638" zValue="0" positionLock="false" itemRotation="0" position="0,0,mm" id="">
+   <FrameColor blue="0" green="0" alpha="255" red="0"/>
+   <BackgroundColor blue="255" green="255" alpha="255" red="255"/>
+   <LayoutObject>
+    <dataDefinedProperties>
+     <Option type="Map">
+      <Option type="QString" value="" name="name"/>
+      <Option name="properties"/>
+      <Option type="QString" value="collection" name="type"/>
+     </Option>
+    </dataDefinedProperties>
+    <customproperties/>
+   </LayoutObject>
+   <symbol force_rhr="0" type="fill" name="" alpha="1" clip_to_extent="1">
+    <layer class="SimpleFill" locked="0" pass="0" enabled="1">
+     <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+     <prop v="255,255,255,255" k="color"/>
+     <prop v="miter" k="joinstyle"/>
+     <prop v="0,0" k="offset"/>
+     <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+     <prop v="MM" k="offset_unit"/>
+     <prop v="35,35,35,255" k="outline_color"/>
+     <prop v="no" k="outline_style"/>
+     <prop v="0.26" k="outline_width"/>
+     <prop v="MM" k="outline_width_unit"/>
+     <prop v="solid" k="style"/>
+     <data_defined_properties>
+      <Option type="Map">
+       <Option type="QString" value="" name="name"/>
+       <Option name="properties"/>
+       <Option type="QString" value="collection" name="type"/>
+      </Option>
+     </data_defined_properties>
+    </layer>
+   </symbol>
+  </LayoutItem>
+  <GuideCollection visible="1"/>
+ </PageCollection>
+ <LayoutItem uuid="{2a81b7aa-7655-4186-bbbe-c6a2d1f35351}" referencePoint="0" templateUuid="{2a81b7aa-7655-4186-bbbe-c6a2d1f35351}" frameJoinStyle="miter" mapRotation="0" frame="true" blendMode="0" opacity="1" positionOnPage="0,0,mm" excludeFromExports="0" labelMargin="0,mm" outlineWidthM="0.3,mm" visibility="1" size="148.5,148.5,mm" keepLayerSet="false" followPreset="false" followPresetName="" background="true" drawCanvasItems="true" groupUuid="" type="65639" zValue="1" positionLock="false" itemRotation="0" position="0,0,mm" mapFlags="0" id="">
+  <FrameColor blue="0" green="0" alpha="255" red="0"/>
+  <BackgroundColor blue="255" green="255" alpha="255" red="255"/>
+  <LayoutObject>
+   <dataDefinedProperties>
+    <Option type="Map">
+     <Option type="QString" value="" name="name"/>
+     <Option name="properties"/>
+     <Option type="QString" value="collection" name="type"/>
+    </Option>
+   </dataDefinedProperties>
+   <customproperties/>
+  </LayoutObject>
+  <Extent ymax="1675415.33939918363466859" xmax="792031.00925685290712863" ymin="1670366.33939403388649225" xmin="786982.00925170292612165"/>
+  <LayerSet/>
+  <AtlasMap atlasDriven="0" margin="0.10000000000000001" scalingMode="2"/>
+  <labelBlockingItems/>
+ </LayoutItem>
+ <customproperties>
+  <property value="png" key="atlasRasterFormat"/>
+ </customproperties>
+ <Atlas sortFeatures="0" filterFeatures="0" pageNameExpression="" hideCoverage="0" coverageLayer="" enabled="0" filenamePattern="'output_'||@atlas_featurenumber"/>
+</Layout>
