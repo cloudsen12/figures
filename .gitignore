@@ -1,5 +1,5 @@
-table1/dataset/*
-!table1/dataset/link-dataset.txt
+table01/
+figure11_thesis/
 
 .Rproj.user
 .Rhistory

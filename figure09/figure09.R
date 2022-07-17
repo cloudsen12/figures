@@ -20,25 +20,34 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-#
+
+
 
 # Load packages ----
-library(tidyverse)
 library(rworldmap)
+library(tidyverse)
 library(cowplot)
 library(raster)
 library(magick)
-library(rgeos)
 library(readr)
+library(rgeos)
 library(proj4)
 library(tmap)
 library(sf)
+library(scales)
 
 # Load dependency functions ----
-source("src//utils.R")
+source("src/utils.R")
 
 # Define projection ----
 crs_goode <- "+proj=igh"
+
+# Load dataset ----
+cloudsen12_db <- read_csv("data/cloudsen12_metadata.csv") %>%
+  group_by(roi_id) %>%
+  slice(1)
+cloudsen12_sf <- st_sf(cloudsen12_db["test"], geometry = st_as_sfc(cloudsen12_db$proj_centroid))
+
 
 # countries boundaries
 world_sf <-
@@ -46,11 +55,35 @@ world_sf <-
   st_transform(crs_goode)
 
 # global boundaries
-world_sf_base <- st_read(
-  dsn = "data/hexagonGrid2.geojson"
-) %>%
-  # st_transform(crs_goode) %>%
-  mutate(test = as.factor(test))
+world_sf_base <-
+  st_read(
+    dsn = "data/hexagonGrid.gpkg",
+    layer = "hexagonGrid"
+  )
+
+# Modify dataset to plot Figure 01 ----
+st_crs(cloudsen12_sf) <- 4326
+cloudsen12_sf <-
+  cloudsen12_sf %>%
+  mutate(row.id = 1:n()) %>%
+  left_join(
+    st_within(
+      st_transform(cloudsen12_sf, crs_goode),
+      world_sf_base
+    ) %>%
+      as.data.frame() %>%
+      as_tibble()
+  )
+
+world_sf_base <-
+  mutate(world_sf_base, col.id = 1:n()) %>%
+  left_join(
+    as.tibble(cloudsen12_sf) %>%
+      dplyr::select(-geometry)
+  ) %>%
+  dplyr::filter(
+    !is.na(test)
+  )
 
 # Goode homolosine Grid ----
 hgoode_grid <- homolosine_goode_grid()
@@ -60,6 +93,7 @@ xlim <- hgoode_grid$xlim
 ylim <- hgoode_grid$ylim
 
 # Simple grid -------------------------------------------------------------
+world_sf_base$test <- as.factor(world_sf_base$test)
 hexaMap <-
   ggplot(world_sf_base) +
   geom_sf(
@@ -107,6 +141,7 @@ hexaMap <-
       ),
     panel.grid.major = element_blank(),
   )
+
 
 # Save simple grid ----
 ggsave(

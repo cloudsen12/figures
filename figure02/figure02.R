@@ -26,35 +26,30 @@ library(magick)
 library(Hmisc)
 
 # Build data before plot ----
-other.dset <-
-  readxl::read_xls("data/dataset.xls") %>%
-  dplyr::filter(Dataset %nin% "cloudSEN12") %>%
-  arrange(pixels) %>%
-  mutate(
-    pixels = round(pixels, 3),
-    lab = as.character(pixels),
-    y = pixels + .8
+dset <- tibble(
+  Dataset = c(
+    "S2-cloudSEN12", "S2-cloudSEN12", "S2-cloudSEN12", "L8-Biome8",
+    "L8-95Cloud", "L8-38Cloud", "S2-cloudCatalog", "S2-CESBIO",
+    "L8-SPARCS", "S2-Hollstein", "S2-WHUS2-CD", "S2-KappaZeta"
+  ),
+  pixels = c(2.591, 0.583, 1.523, 3.964, 3.737, 1.494, 0.535, 0.109, 0.080, 0.003, 4.273, 1.064),
+  type = c("high-quality", "scribble", "no-annotation", rep(NA, 9)),
+  sensor = c(
+    "Sentinel-2/Sentinel-1", "Sentinel-2/Sentinel-1", "Sentinel-2/Sentinel-1",
+    "Landsat8", "Landsat8", "Landsat8", "Sentinel-2", "Sentinel-2", "Landsat8",
+    "Sentinel-2", "Sentinel-2", "Sentinel-2"
+  ),
+  lab = c("2.59", "0.58", "1.52", "3.96", "3.74", "1.49", "0.54", "0.11", "0.08", "0.003", "4.27", "1.06"),
+  y = c(1.305, 2.890, 3.960, 1.980, 1.870, 0.770, 0.275, 0.258, 0.230, 0.190, 2.375, 0.545)
+)
+
+dset$Dataset <- factor(
+  x = dset$Dataset,
+  levels = c(
+    "S2-cloudSEN12", "S2-WHUS2-CD", "L8-Biome8", "L8-95Cloud", "L8-38Cloud",
+    "S2-KappaZeta", "S2-cloudCatalog", "S2-CESBIO", "L8-SPARCS", "S2-Hollstein"
   )
-
-other.dset$y[6:7] <- (other.dset$pixels)[6:7] / 2
-
-dset <-
-  other.dset %>%
-  bind_rows(
-    readxl::read_xls("data/dataset.xls") %>%
-      dplyr::filter(Dataset %in% "cloudSEN12") %>%
-      mutate(id = c(3, 1, 2)) %>%
-      arrange(desc(id)) %>%
-      mutate(
-        pixels = round(pixels, 3),
-        lab = sprintf("%1s", round(pixels, 1)),
-        ycum = cumsum(pixels),
-        y = ycum - (pixels / 2)
-      ) %>%
-      arrange(id)
-  ) %>%
-  arrange(desc(row_number())) %>%
-  mutate(Dataset = as_factor(Dataset))
+)
 
 # Plot ----
 barplot <-
@@ -70,11 +65,15 @@ barplot <-
     position = "stack", stat = "identity",
     colour = "black"
   ) +
+  scale_fill_manual(
+    values = c("#999999", "#E69F00", "#56B4E9"),
+    na.value = "#05ed79"
+  ) +
   scale_linetype_manual(values = c("solid", "dashed", "solid")) +
-  scale_fill_manual(values = c("#999999", "#E69F00", "#56B4E9")) +
   scale_y_continuous(
-    breaks = seq(0, 4.6, 1.5),
-    limits = c(0, 5.35)
+    breaks = seq(0, 4.5, 1.5),
+    limits = c(0, 4.8),
+    expand = c(0, 0)
   ) +
   theme_bw() +
   theme(
@@ -82,7 +81,7 @@ barplot <-
     legend.key.width = unit(1.2, "cm"),
     legend.key.height = unit(.5, "cm"),
     legend.title = element_blank(),
-    legend.position = c(.67, .88),
+    legend.position = c(.83, .87),
     legend.direction = "vertical",
     legend.box = "horizontal",
     legend.text = element_text(size = 12, family = "Source Sans Pro"),
@@ -119,13 +118,15 @@ barplot <-
   ) +
   guides(fill = guide_legend(ncol = 1)) +
   coord_flip()
+barplot
 
 # Save ggplot object ----
 ggsave(
-  plot = barplot, "figure02/figure02.png",
-  width = 13, height = 13, units = "cm", dpi = 500
+  plot = barplot, "figure02/figure02.svg",
+  width = 18, height = 12, units = "cm", dpi = 500
 )
 
+raster::extract()
 # Trim figure ----
 img <-
   magick::image_read("figure02/figure02.png", strip = TRUE) %>%

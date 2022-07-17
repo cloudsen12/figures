@@ -27,6 +27,7 @@
 library(rworldmap)
 library(tidyverse)
 library(cowplot)
+library(scales)
 library(raster)
 library(magick)
 library(readr)
@@ -34,7 +35,6 @@ library(rgeos)
 library(proj4)
 library(tmap)
 library(sf)
-library(scales)
 
 # Load dependency functions ----
 source("src/utils.R")
@@ -43,12 +43,22 @@ source("src/utils.R")
 crs_goode <- "+proj=igh"
 
 # Load dataset ----
-# scene centroid points
-cloudsen12_sf <- read_sf("data/cloudsen12_db.geojson")
+#cloudsen12_metadata <- read_sf("data/cloudsen12_db.geojson")
+cloudsen12_metadata <- read_csv("data/cloudsen12_metadata.csv")
+cloudsen12_metadata[is.na(cloudsen12_metadata$pixels), "pixels"] <- 0
+cloudsen12_metadata$pixels  <- cloudsen12_metadata$pixels %>% as.numeric()
+cloudsen12_db <- cloudsen12_metadata[c("roi_id", "pixels", "proj_centroid")] %>%
+  group_by(roi_id, proj_centroid) %>%
+  summarise(pixels = sum(pixels))
+cloudsen12_sf <- st_sf(cloudsen12_db, geometry = st_as_sfc(cloudsen12_db$proj_centroid))
+cloudsen12_sf$proj_centroid <- NULL
+st_crs(cloudsen12_sf) <- 4326
+
 # countries boundaries
 world_sf <-
   st_as_sf(getMap(resolution = "low")) %>%
   st_transform(crs_goode)
+
 # global boundaries
 world_sf_base <-
   st_read(
@@ -60,8 +70,7 @@ world_sf_base <-
 cloudsen12_sf <-
   cloudsen12_sf %>%
   mutate(
-    row.id = 1:n(),
-    pixels = ifelse(type == "nolabel", 259081, pixels)
+    row.id = 1:n()
   ) %>%
   left_join(
     st_within(
@@ -77,7 +86,7 @@ cloudsen12_sf <-
 world_sf_base <-
   mutate(world_sf_base, col.id = 1:n()) %>%
   left_join(
-    as.tibble(cloudsen12_sf) %>%
+    as_tibble(cloudsen12_sf) %>%
       dplyr::select(-geometry)
   ) %>%
   dplyr::filter(
@@ -132,7 +141,7 @@ hexaMap <-
     crs = crs_goode, xlim = 0.95 * xlim,
     ylim = 0.95 * ylim, expand = FALSE
   ) +
-  labs(fill = "Number of pixels [mill.]") +
+  labs(fill = "Number of manually annotated pixels per hexagon [mill.]") +
   scale_y_continuous(
     breaks = seq(-90, 90, by = 30),
     minor_breaks = seq(-90, 90, 15)
