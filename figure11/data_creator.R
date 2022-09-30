@@ -26,9 +26,9 @@ library(reticulate)
 library(tidyverse)
 library(stars)
 library(sf)
-source("figure11/utils.R")
+source("figure10/utils.R")
 # 2. Make predictions with the pretrained model (U-Net MobileNetV2)
-source_python("figure11/unet_mobilenetv2_prediction/main.py")
+source_python("figure10/unet_mobilenetv2_prediction/main.py")
 
 
 # 3. Convert s2cloudless cloud probabilities to binary cloud mask ---------
