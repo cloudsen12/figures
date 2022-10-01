@@ -8,15 +8,10 @@
 
 <p align="center">  
   • 
-  <a href="#why-we-need-another-cloud-detection-dataset">Introduction</a> &nbsp;•  
   <a href="#characteristics">Instructions</a> &nbsp;•
   <a href="#citation">Citation</a> &nbsp;•
-  <a href="#credits">Credits</a>  
+  <a href="#acknowledgment">Acknowledgment</a>  
 </p>
-
-## Introduction
-
-This repository contain the code used to create all the figures of cloudSEN12 paper. [@fernandoprudencio](https://github.com/fernandoprudencio) is a skillful researcher (and good friend). Unfortnadtely, he prefer to user tidyverse rather than data.table </3. So if the API changed again, please let us!
 
 ## Instructions
 
@@ -25,7 +20,14 @@ This repository contain the code used to create all the figures of cloudSEN12 pa
 
 ## Citation 
 
-	COMMING SOON 
+```
+@article{aybar2022cloudsen12,
+  title={CloudSEN12-a global dataset for semantic understanding of cloud and cloud shadow in Sentinel-2},
+  author={Aybar, Cesar and Ysuhuaylas, Luis and Loja, Jhomira and Gonzales, Karen and Herrera, Fernando and Yali, Roy and Flores, Angie and Diaz, Lissette and Cuenca, Nicole and Espinoza, Wendy and Prudencio, Fernando and Llactayo, Valeria and Montero, David and Sudmanns, Martin and Tiede, Dirk and Mateo-García, Gonzalo and Gómez-Chova, Luis},
+  year={2022},
+  publisher={EarthArXiv}
+}
+```
 	
 ## Acknowledgment
 
@@ -34,8 +36,3 @@ This project gratefully acknowledges:
 <img src=https://user-images.githubusercontent.com/16768318/153642319-9bb91ef6-a400-47ff-a080-9b4406390153.svg width=20%>
 
 **for computing resources**
-
-<img src=https://user-images.githubusercontent.com/16768318/153673173-e9069a03-daa7-4893-93ef-246248d48351.png width=20%>
-
-**for rgee and rgeeExtra software**
-
